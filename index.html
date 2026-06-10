@@ -457,24 +457,29 @@ src="https://www.facebook.com/tr?id=2363893060683126&ev=PageView&noscript=1"
   <p>Copyright 2026 by Jellyfil Research. All rights reserved.</p>
 </footer>
 
-<!-- Script subid BuyGoods -->
 <script>
-(function() {
-  function corrigirLinksBuyGoods() {
-    var urlParams = new URLSearchParams(window.location.search);
-    var realSubid = urlParams.get('subid');
-    if (!realSubid) return;
-    document.querySelectorAll('a[href*="buygoods.com/secure/checkout.html"]').forEach(function(botao) {
-      var href = botao.getAttribute('href');
-      if (href && !href.includes('&subid=' + realSubid)) {
-        botao.setAttribute('href', href + '&subid=' + encodeURIComponent(realSubid));
-      }
-    });
-  }
-  document.addEventListener("DOMContentLoaded", corrigirLinksBuyGoods);
-  setInterval(corrigirLinksBuyGoods, 1000);
-})();
-</script>
+    (function() {
+        function corrigirLinksBuyGoods() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const realSubid = urlParams.get('subid');
+
+            if (!realSubid) return; 
+
+            const botoes = document.querySelectorAll('a[href*="buygoods.com/secure/checkout.html"]');
+            
+            botoes.forEach(function(botao) {
+                let href = botao.getAttribute('href');
+                
+                if (href && !href.includes('&subid=' + realSubid)) {
+                    botao.setAttribute('href', href + '&subid=' + encodeURIComponent(realSubid));
+                }
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", corrigirLinksBuyGoods);
+        setInterval(corrigirLinksBuyGoods, 1000); // Mantém ativo caso a VTurb mexer depois
+    })();
+    </script>
 
 <script src="https://untamedpleasure.site/leanpeak/assets/js/pote.js"></script>
 
