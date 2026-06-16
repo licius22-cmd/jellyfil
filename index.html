@@ -478,7 +478,71 @@ src="https://www.facebook.com/tr?id=2363893060683126&ev=PageView&noscript=1"
     })();
     </script>
 
+ <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var trackingDomain = "rrbrh.ttrk.io";
+  var eventType = "InitiateCheckout";
+
+  function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(";");
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i].trim();
+      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length);
+    }
+    return null;
+  }
+
+  function getSubIdFromUrl() {
+    var params = new URLSearchParams(window.location.search);
+    for (var [key, value] of params.entries()) {
+      if (value.length === 24) return value;
+    }
+    return null;
+  }
+
+  function sendPostback() {
+    var subId = getCookie("rtkclickid-store") || getSubIdFromUrl();
+
+    if (subId) {
+      var postbackUrl =
+        "https://" + trackingDomain + "/postback?clickid=" + subId + "&type=" + eventType;
+      new Image().src = postbackUrl;
+      console.log("Postback enviado:", postbackUrl);
+    } else {
+      console.warn("SubId não encontrado.");
+    }
+  }
+
+  function attachListener(el) {
+    if (el.hasAttribute("data-pb-done")) return;
+    el.setAttribute("data-pb-done", "true");
+    el.addEventListener("click", sendPostback);
+  }
+
+  // Attach em todos os links e botões existentes
+  document.querySelectorAll("a, button[data-href]").forEach(attachListener);
+
+  // Observar novos elementos adicionados dinamicamente (ex: VTurb inject)
+  new MutationObserver(function (mutations) {
+    mutations.forEach(function (mutation) {
+      mutation.addedNodes.forEach(function (node) {
+        if (node.nodeType !== 1) return;
+        node.querySelectorAll("a, button[data-href]").forEach(attachListener);
+        if (
+          (node.tagName === "A" || (node.tagName === "BUTTON" && node.hasAttribute("data-href")))
+        ) {
+          attachListener(node);
+        }
+      });
+    });
+  }).observe(document.body, { childList: true, subtree: true });
+});
+</script>
+
 <script src="https://untamedpleasure.site/leanpeak/assets/js/pote.js"></script>
+
+ 
 
 </body>
 </html>
